@@ -1,0 +1,15 @@
+
+user_dir: "/home/azureuser"
+
+
+djangoservice:
+  workingdir: /home/azureuser/newproject/myproject
+  execstart: /home/azureuser/newproject/myvenv/bin/gunicorn --access-logfile - --workers 3 --bind 0.0.0.0:8000 myproject.wsgi:application
+
+django:
+  env:
+    SECRET_KEY: 'sfvgbrh212131'
+    DATABASE_URL: 'postgresql://demouser:pass123@localhost/demodb'
+
+user_name: azureuser
+app_port: 8000

@@ -1,0 +1,62 @@
+---
+# Install and configure MailHog.
+- hosts: deploy-vm-2
+
+  tasks:
+
+  - name: install go get
+    shell : "apt-get -y install golang-go "
+    become: yes
+    become_user: root
+
+
+
+  - name: get MailHog
+    shell : "go install github.com/mailhog/MailHog@latest"
+
+  
+  - name: install mhsendemail
+    shell : "go install github.com/mailhog/mhsendmail@latest"
+
+  
+  - name: copy mailhog service file
+    template:
+        src: ../files/mailhog/mailhog.service
+        dest: "/etc/systemd/system/mailhog.service"
+    become: yes
+    become_user: root
+   
+    
+  - name: copy nginx conf file
+    template:
+        src: ../files/nginx/demo.mailhog.nginx.j2
+        dest: "/etc/nginx/sites-available/mailhog"
+    become: yes
+    become_user: root
+
+  
+  - name: enable mailhog site in nginx
+    file:
+        src: "/etc/nginx/sites-available/mailhog"
+        dest: "/etc/nginx/sites-enabled/mailhog"
+        state: link
+    notify:
+        - restart nginx
+        - reload nginx
+    become: yes
+    become_user: root
+
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded
+      become: yes
+    
