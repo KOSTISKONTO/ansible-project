@@ -78,7 +78,7 @@
     lineinfile:
       dest: "{{app_dir}}/myproject/myproject/settings.py"
       regexp: "^ALLOWED_HOSTS ="
-      line: "ALLOWED_HOSTS = {{ ansible_all_ipv4_addresses + [public_ip.json.ip]}}"
+      line: "ALLOWED_HOSTS = {{ ansible_all_ipv4_addresses + [public_ip.json.ip] + 'http://fansproject.northeurope.cloudapp.azure.com/'}}"
       state: present
 
   - name: install and activate virtual environment
